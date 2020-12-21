@@ -1,0 +1,15 @@
+apiVersion: sources.knative.dev/{{eventing-api-version}}
+kind: SinkBinding
+metadata:
+  name: publisher-to-channel-binding
+  namespace: {{namespace}}
+spec:
+  subject:
+    apiVersion: v1
+    kind: Pod
+    name: publisher
+  sink:
+    ref:
+      apiVersion: messaging.knative.dev/{{eventing-api-version}}
+      kind: InMemoryChannel
+      name: my-channel

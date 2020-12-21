@@ -1,0 +1,10 @@
+apiVersion: serving.knative.dev/{{serving-api-version}}
+kind: Service
+metadata:
+  name: subscriber-b
+  namespace: {{namespace}}
+spec:
+  template:
+    spec:
+      containers:
+      - image: {{publish-subscribe-channel/cmd/cloudEventListener.js}}

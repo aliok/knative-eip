@@ -1,0 +1,15 @@
+apiVersion: messaging.knative.dev/{{eventing-api-version}}
+kind: Subscription
+metadata:
+  name: subscription-a
+  namespace: {{namespace}}
+spec:
+  channel:
+    apiVersion: messaging.knative.dev/{{eventing-api-version}}
+    kind: InMemoryChannel
+    name: my-channel
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/{{serving-api-version}}
+      kind: Service
+      name: subscriber-a

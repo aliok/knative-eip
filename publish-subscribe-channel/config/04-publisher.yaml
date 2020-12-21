@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: publisher
+  namespace: {{namespace}}
+spec:
+  containers:
+  - name: publisher-container
+    image: {{publish-subscribe-channel/cmd/cloudEventPublisher.js}}
