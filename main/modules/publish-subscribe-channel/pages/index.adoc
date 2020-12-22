@@ -1,14 +1,15 @@
-# Publish-Subscribe Channel
+= Publish-Subscribe Channel
+
+This pattern is available in detail at https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html[Enterprise Integration Patterns book].
 
 How can the sender broadcast an event to all interested receivers?
 
 Send the event on a Publish-Subscribe Channel, which delivers a copy of a particular event to each receiver.
 
-Link: <https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html> 
-
 The sample implementation of this pattern in Knative is as following:
 
-```
+[source]
+----
                                                                                                +-------------------+
                                                                                                |                   |
                                                                        +----->  Event +-------->  Subscriber A     |
@@ -26,18 +27,74 @@ The sample implementation of this pattern in Knative is as following:
                                                                        +----->  Event +-------->  Subscriber B     |
                                                                                                |                   |
                                                                                                +-------------------+
-``` 
+----
 
 The publisher is an application that submits events to the Knative channel.
 Subscriber A and B are subscribed to the channel, and they both receive events from the channel.
 
 
-# Knative Implementation
+== Knative Implementation
 
-```yaml
+[source,yaml]
+----
+include::example$01-channel.yaml[]
+----
 
-
-```
-Code above creates a Knative [channel](https://knative.dev/docs/eventing/channels/), specifically an `InMemoryChannel`. 
+Code above creates a Knative https://knative.dev/docs/eventing/channels/[channel], specifically an `InMemoryChannel`.
 Other channels may also be used for various reasons such as a necessity for persistence or when the subscribers do not
 have the same speed as the publisher.
+
+Following code creates 2 Knative services, `subscriber-a` and `subscriber-b`. We will later create subscriptions for these applications,
+and they will start receiving events from the channel.
+
+[source,yaml]
+----
+include::example$02-subscriber-a.yaml[]
+----
+
+[source,yaml]
+----
+include::example$02-subscriber-b.yaml[]
+----
+
+Let's create the subscriptions now:
+
+[source,yaml]
+----
+include::example$03-subscription-a.yaml[]
+----
+
+[source,yaml]
+----
+include::example$03-subscription-b.yaml[]
+----
+
+Publisher is a simple web application that just posts an event to the injected sink, channel in this case, every second:
+
+[source,javascript]
+----
+include::../cmd/cloudEventPublisher.js[tags=send]
+----
+
+Let's create the publisher pod:
+
+[source,yaml]
+----
+include::example$04-publisher.yaml[]
+----
+
+Final step is to bind the publisher to the channel:
+
+[source,yaml]
+----
+include::example$05-sink-binding.yaml[]
+----
+
+`SinkBinding` created above will get Knative to inject a `K_SINK` environment variable to the publisher pod, with the channel URL.
+
+That environment variable is read in the publisher application:
+
+[source,javascript]
+----
+include::../cmd/cloudEventPublisher.js[tags=read-sink]
+----

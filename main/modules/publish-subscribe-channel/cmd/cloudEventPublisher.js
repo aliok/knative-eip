@@ -4,12 +4,15 @@ const {HTTP, CloudEvent} = require("cloudevents");
 const {registerHooks, terminate} = require("./lib/exit");
 registerHooks();
 
+// tag::read-sink[]
 const sinkUrl = process.env.K_SINK;
 if (!sinkUrl) {
     terminate("Environment variable K_SINK is not defined", -1);
     return;
 }
+// end::read-sink[]
 
+// tag::send[]
 let lastMessageId = 0;
 let sendMessage = function () {
     try {
@@ -34,3 +37,4 @@ let sendMessage = function () {
 };
 
 setInterval(sendMessage, 1000);
+// end::send[]
