@@ -1,8 +1,6 @@
 dev:
-	rm -rf ./gh-pages
-	antora site.yaml
+	./build.sh
 
 netlify-head:
-	rm -rf ./gh-pages
 	npm install --global @antora/cli@2.3 @antora/site-generator-default@2.3
-	antora site.yaml
+	./build.sh
