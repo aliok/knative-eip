@@ -6,4 +6,4 @@ metadata:
 spec:
   containers:
   - name: publisher-container
-    image: {{publish-subscribe-channel/cmd/cloudEventPublisher.js}}
+    image: img:publish-subscribe-channel/cmd/cloud-event-publisher.js

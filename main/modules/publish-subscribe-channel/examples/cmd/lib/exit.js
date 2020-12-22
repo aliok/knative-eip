@@ -23,7 +23,7 @@ function registerHooks() {
         console.error("Uncaught exception:")
         console.error(err);
         terminate("Uncaught exception: " + err.message);
-    })
+    });
 }
 
 function terminate(msg = "", exitCode = -1) {

@@ -7,4 +7,4 @@ spec:
   template:
     spec:
       containers:
-      - image: {{publish-subscribe-channel/cmd/cloudEventListener.js}}
+      - image: img:publish-subscribe-channel/cmd/cloud-event-listener.js
