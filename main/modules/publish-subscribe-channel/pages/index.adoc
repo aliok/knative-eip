@@ -73,7 +73,7 @@ Publisher is a simple web application that just posts an event to the injected s
 
 [source,javascript]
 ----
-include::../cmd/cloudEventPublisher.js[tags=send]
+include::example$/cmd/cloudEventPublisher.js[tags=send]
 ----
 
 Let's create the publisher pod:
@@ -96,5 +96,5 @@ That environment variable is read in the publisher application:
 
 [source,javascript]
 ----
-include::../cmd/cloudEventPublisher.js[tags=read-sink]
+include::example$/cmd/cloudEventPublisher.js[tags=read-sink]
 ----
