@@ -2,7 +2,6 @@ apiVersion: serving.knative.dev/{{serving-api-version}}
 kind: Service
 metadata:
   name: subscriber-b
-  namespace: {{namespace}}
 spec:
   template:
     spec:

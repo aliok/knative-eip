@@ -2,7 +2,6 @@ apiVersion: sources.knative.dev/{{eventing-api-version}}
 kind: SinkBinding
 metadata:
   name: publisher-to-channel-binding
-  namespace: {{namespace}}
 spec:
   subject:
     apiVersion: v1

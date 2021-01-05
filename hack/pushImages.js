@@ -10,8 +10,11 @@ process.on('uncaughtException', function (err) {
 const yargs = require('yargs/yargs')
 const {hideBin} = require('yargs/helpers')
 const YAML = require('yaml');
-const {readFileSync} = require('fs');
+const {readFileSync, writeFileSync} = require('fs');
 const {basename} = require('path');
+const glob = require("glob")
+const tmp = require("tmp");
+
 
 const argv = yargs(hideBin(process.argv)).argv
 
@@ -38,6 +41,13 @@ if (!argv['baseDir']) {
     console.log("Going to use baseDir: " + argv['baseDir']);
 }
 
+if (!argv['dockerFile']) {
+    console.error("dockerFile is not defined");
+    process.exit(-1);
+} else if (verbose) {
+    console.log("Going to use dockerFile: " + argv['dockerFile']);
+}
+
 const koDockerRepo = process.env['KO_DOCKER_REPO'];
 if (!koDockerRepo) {
     console.error("Environment variable KO_DOCKER_REPO is not defined");
@@ -52,8 +62,6 @@ if (!argv['tag']) {
 } else if (verbose) {
     console.log("Going to use tag: " + argv['tag']);
 }
-
-const glob = require("glob")
 
 // TODO: handle errors
 const files = glob.sync(argv['glob']);
@@ -83,13 +91,27 @@ for (let imageRef of allImageRefs) {
 }
 
 
+// TODO: missing error handling in entire function
 function buildImage(filePath, imageName) {
-    console.log("Building " + filePath + " as " + imageName)
+    if (verbose) {
+        console.log("Building " + filePath + " as " + imageName)
+    }
 
-    // TODO:
-    // - build using the Dockerfile in the hack/ dir
-    // - publish
-    // -
+    // - copy DockerFile to temp file
+    // - append `CMD [ "node", "path/to/command.js" ]` to the temp Dockerfile
+    // - build using `docker build --file tempDockerFile -t imageName baseDir`
+
+    const dockerFile = argv['dockerFile'];
+    let dockerFileContent = readFileSync(dockerFile, "utf-8").toString();
+
+    dockerFileContent += 'CMD [ "node", "' + filePath + '" ]';
+
+    const tmpDockerFile = tmp.fileSync().name;
+
+    writeFileSync(tmpDockerFile, dockerFileContent, "utf-8");
+
+    // TODO: build
+
 }
 
 function findImageRefs(yaml, prefix) {

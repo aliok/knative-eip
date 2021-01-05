@@ -2,7 +2,6 @@ apiVersion: messaging.knative.dev/{{eventing-api-version}}
 kind: Subscription
 metadata:
   name: subscription-a
-  namespace: {{namespace}}
 spec:
   channel:
     apiVersion: messaging.knative.dev/{{eventing-api-version}}
